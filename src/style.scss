@@ -1,0 +1,175 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap");
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+
+// Primary Colors
+$yellow: #fbce2f;
+$background: #2f2f2f;
+
+// Secondary Colors
+$white: #fff;
+$border: #4d4d4d;
+$completed: #686868;
+
+$modal-bg: #2f2f2f;
+
+// Font-size
+$default: 1.5rem;
+
+[contenteditable] {
+  outline: none;
+}
+
+::selection {
+  background-color: $yellow;
+  color: $background;
+}
+
+body {
+  background: $background;
+  header {
+    h1 {
+      font-size: 80px;
+      font-weight: 900;
+      text-align: center;
+      margin: 30px 0; // Subject to change 56px for now.
+      color: $yellow;
+      text-transform: uppercase;
+    }
+  }
+
+  // .hidden {
+  //   display: none;
+  // }
+
+  .form-container {
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    display: flex; //flex to be visible.
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(3px);
+    z-index: 1000;
+    background-color: #1f1f1fa1;
+    transform: translateY(-158px);
+    /*Within my react file, when it displays I want it to no-longer be scrollable.*/
+
+    form {
+      width: 650px;
+      background: $modal-bg;
+      padding: 30px 30px 15px 30px;
+      border-radius: 16px;
+
+      textarea {
+        width: 100%;
+        font-size: 20px;
+        color: $white;
+        caret-color: $yellow;
+        background-color: $modal-bg;
+        outline: none;
+        border-radius: 4.5px;
+        resize: none;
+        padding: 0.68rem;
+        &:focus {
+          border: 1px solid $yellow;
+        }
+      }
+      .action-btns {
+        display: flex;
+        width: 100%;
+        justify-content: right;
+        gap: 0.6rem;
+        button {
+          font-size: 20px;
+          font-weight: 700;
+          border-radius: 4.5px;
+          margin: 15px 0 0 0;
+          width: 120px;
+          cursor: pointer;
+
+          &[type="button"] {
+            background: none;
+            color: yellow;
+            border: 1px solid yellow;
+            padding: 9px 0;
+          }
+          &[type="submit"] {
+            background: $yellow;
+            border: none;
+          }
+        }
+      }
+    }
+  }
+
+  main {
+    margin: 0 150px;
+    .action-btn {
+      color: $yellow;
+      font-size: $default;
+      text-align: right;
+      cursor: pointer;
+    }
+
+    ul {
+      li {
+        list-style: none;
+        display: flex;
+        align-items: center;
+        .task {
+          color: white;
+          border: solid 3px $border;
+          padding: 0.4rem 0.8rem;
+          margin: 25px 0;
+          border-radius: 60px;
+          display: flex;
+          align-items: center;
+          font-size: $default;
+          width: 100%;
+          img {
+            cursor: pointer;
+            transform: scale(0.7);
+          }
+          .more-btn {
+            margin: 0 0.6rem 0 0;
+          }
+          .task-description {
+            margin: 0 0 0 1rem;
+            flex-grow: 1;
+          }
+        }
+        .task-menu {
+          display: flex;
+          flex-direction: column;
+          position: absolute;
+          justify-content: center;
+          color: $white;
+          background: $background;
+          border: $border 2.3px solid; // might change border radius later
+          border-radius: 8px;
+          font-size: 1rem;
+          line-height: 1.5rem;
+          padding: 0 1rem 0 0.5rem;
+        }
+      }
+    }
+
+    section.finished {
+      .headings {
+        display: flex;
+        justify-content: space-between;
+
+        h3 {
+          color: $yellow;
+          font-size: $default;
+          font-weight: 600;
+        }
+      }
+    }
+  }
+}
