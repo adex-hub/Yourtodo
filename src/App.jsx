@@ -11,9 +11,15 @@ function App() {
   const [modalVisible, setModalVisible] = useState(false);
 
   function handleToggleModal() {
-    //1. Make modal visible
     setModalVisible((show) => !show);
   }
+
+  // function handleToggleItem(id) {
+  //   initialItems.forEach((item) => {
+  //     item.id === id ? { ...item, done: !item.done } : item;
+  //     console.log(item.id);
+  //   });
+  // }
 
   return (
     <>
@@ -41,7 +47,7 @@ function Title() {
   return (
     <header>
       <h1>
-        <span contentEditable={true} spellCheck="false">
+        <span contentEditable spellCheck="false">
           ADE
         </span>
         &apos;S TODO
