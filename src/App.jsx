@@ -8,6 +8,8 @@ import { useKey } from "./useKey";
 
 function App() {
   const [items, setItems] = useState([]);
+  const [taskInfo, setTaskInfo] = useState("");
+
   function handleAddTask(item) {
     setItems((items) => [...items, item]);
   }
@@ -21,7 +23,12 @@ function App() {
     <>
       <Title />
       {modalVisible && (
-        <AddTask onToggleModal={handleToggleModal} onAddTask={handleAddTask} />
+        <AddTask
+          onToggleModal={handleToggleModal}
+          onAddTask={handleAddTask}
+          taskInfo={taskInfo}
+          onTaskInfo={setTaskInfo}
+        />
       )}
 
       <main>
@@ -29,6 +36,7 @@ function App() {
           onToggleModal={handleToggleModal}
           items={items}
           onItems={setItems}
+          onTaskInfo={setTaskInfo}
         />
         <Indicator items={items} />
       </main>
@@ -87,7 +95,7 @@ function Action({ children, onClick, items }) {
   );
 }
 
-function TodoList({ onToggleModal, items, onItems }) {
+function TodoList({ onToggleModal, items, onItems, onTaskInfo }) {
   useKey("Escape", onToggleModal); //not too necessary.
 
   const handleToggleTask = (taskId) => {
@@ -110,6 +118,11 @@ function TodoList({ onToggleModal, items, onItems }) {
     onItems(goneItems);
   }
 
+  function handleEditTask(task) {
+    onTaskInfo(task);
+    onToggleModal();
+  }
+
   return (
     <>
       <section className="unfinished">
@@ -125,6 +138,7 @@ function TodoList({ onToggleModal, items, onItems }) {
                 item={item}
                 key={item.id}
                 onToggleTask={handleToggleTask}
+                onEditTask={handleEditTask}
                 onDeleteTask={handleDeleteTask}
               />
             ))}
@@ -147,10 +161,10 @@ function TodoList({ onToggleModal, items, onItems }) {
                   item={item}
                   key={item.id}
                   onToggleTask={handleToggleTask}
+                  onEditTask={handleEditTask}
                   onDeleteTask={handleDeleteTask}
                 />
-              ))
-              .sort((a, b) => a - b)}
+              ))}
           </ul>
         </section>
       )}
@@ -158,7 +172,7 @@ function TodoList({ onToggleModal, items, onItems }) {
   );
 }
 
-function Item({ item, onToggleTask, onDeleteTask }) {
+function Item({ item, onToggleTask, onDeleteTask, onEditTask }) {
   const taskRef = useRef(null);
   const [taskWidth, setTaskWidth] = useState(0);
   const [taskHeight, setTaskHeight] = useState(0);
@@ -221,7 +235,15 @@ function Item({ item, onToggleTask, onDeleteTask }) {
             height: `${taskHeight}px`,
           }}
         >
-          <p style={{ cursor: "pointer" }}>Edit</p>
+          <p
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              onEditTask(item.task);
+              handleMenuDisplay(item.id);
+            }}
+          >
+            Edit
+          </p>
           <p
             style={{ cursor: "pointer" }}
             onClick={() => onDeleteTask(item.id)}
@@ -248,9 +270,8 @@ function Indicator({ items }) {
   );
 }
 
-function AddTask({ onToggleModal, onAddTask }) {
-  const inputEl = useRef(null); // would prolly change to textarea later and useKey it to the enter key ensuring submission
-  const [taskInfo, setTaskInfo] = useState("");
+function AddTask({ taskInfo, onToggleModal, onAddTask, onTaskInfo }) {
+  const inputEl = useRef(null);
 
   useEffect(() => {
     inputEl.current.focus();
@@ -275,26 +296,33 @@ function AddTask({ onToggleModal, onAddTask }) {
 
     const newTask = { id: Date.now(), task: taskInfo, done: false };
     onAddTask(newTask);
-    setTaskInfo("");
+    onTaskInfo("");
     onToggleModal();
   }
+
+  // function saveEditedTask(e, taskId) {
+  //   e.preventDefault();
+  // }
 
   return (
     <>
       <form className="form" onSubmit={handleSubmit}>
+        {" "}
+        {/*taskInfo === "" ? handleSubmit : onEdit */}
         <input
           type="text"
           placeholder="Enter a new task"
           ref={inputEl}
           value={taskInfo}
-          onChange={(e) => setTaskInfo(e.target.value)}
+          onChange={(e) => onTaskInfo(e.target.value)}
           spellCheck="false"
         />
         <div className="action-btns">
           <button type="button" onClick={onToggleModal}>
             Cancel
           </button>
-          <button type="submit">Add task</button>
+          <button type="submit">Add task</button>{" "}
+          {/*taskInfo === "" ? Add task : Save  (It wouldn't actually work.)*/}
         </div>
       </form>
       <div className="overlay" onClick={onToggleModal}></div>
