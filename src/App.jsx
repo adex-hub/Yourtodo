@@ -5,10 +5,13 @@ import Unchecked from "./assets/images/checkcircle.svg";
 import Checked from "./assets/images/checked.svg";
 import More from "./assets/images/more.svg";
 import { useKey } from "./useKey";
+import { useLocalStorageState } from "./useLocalStorageState";
 
 function App() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useLocalStorageState([], "items");
   const [taskInfo, setTaskInfo] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
   function handleAddTask(item) {
     setItems((items) => [...items, item]);
@@ -19,12 +22,13 @@ function App() {
     setModalVisible((show) => !show);
   }
 
-  // function handleToggleItem(id) {
-  //   initialItems.forEach((item) => {
-  //     item.id === id ? { ...item, done: !item.done } : item;
-  //     console.log(item.id);
-  //   });
-  // }
+  function toggleEditState() {
+    setIsEditing((isEditing) => !isEditing);
+  }
+
+  function handleMenuDisplay(id) {
+    setSelectedId(id !== selectedId ? id : null);
+  }
 
   return (
     <>
@@ -35,6 +39,12 @@ function App() {
           onAddTask={handleAddTask}
           taskInfo={taskInfo}
           onTaskInfo={setTaskInfo}
+          isEditing={isEditing}
+          onEditState={toggleEditState}
+          selectedId={selectedId}
+          onMenuDisplay={handleMenuDisplay}
+          items={items}
+          onItems={setItems}
         />
       )}
 
@@ -44,6 +54,9 @@ function App() {
           items={items}
           onItems={setItems}
           onTaskInfo={setTaskInfo}
+          onEditState={toggleEditState}
+          selectedId={selectedId}
+          onMenuDisplay={handleMenuDisplay}
         />
         <Indicator items={items} />
       </main>
@@ -102,7 +115,15 @@ function Action({ children, onClick, items }) {
   );
 }
 
-function TodoList({ onToggleModal, items, onItems, onTaskInfo }) {
+function TodoList({
+  onToggleModal,
+  items,
+  onItems,
+  onTaskInfo,
+  onEditState,
+  selectedId,
+  onMenuDisplay,
+}) {
   useKey("Escape", onToggleModal); //not too necessary.
 
   const handleToggleTask = (taskId) => {
@@ -128,6 +149,7 @@ function TodoList({ onToggleModal, items, onItems, onTaskInfo }) {
   function handleEditTask(task) {
     onTaskInfo(task);
     onToggleModal();
+    // console.log(isEditing);
   }
 
   return (
@@ -147,6 +169,9 @@ function TodoList({ onToggleModal, items, onItems, onTaskInfo }) {
                 onToggleTask={handleToggleTask}
                 onEditTask={handleEditTask}
                 onDeleteTask={handleDeleteTask}
+                onEditState={onEditState}
+                selectedId={selectedId}
+                onMenuDisplay={onMenuDisplay}
               />
             ))}
         </ul>
@@ -170,6 +195,9 @@ function TodoList({ onToggleModal, items, onItems, onTaskInfo }) {
                   onToggleTask={handleToggleTask}
                   onEditTask={handleEditTask}
                   onDeleteTask={handleDeleteTask}
+                  onEditState={onEditState}
+                  selectedId={selectedId}
+                  onMenuDisplay={onMenuDisplay}
                 />
               ))}
           </ul>
@@ -179,11 +207,18 @@ function TodoList({ onToggleModal, items, onItems, onTaskInfo }) {
   );
 }
 
-function Item({ item, onToggleTask, onDeleteTask, onEditTask }) {
+function Item({
+  item,
+  onToggleTask,
+  onDeleteTask,
+  onEditTask,
+  onEditState,
+  selectedId,
+  onMenuDisplay,
+}) {
   const taskRef = useRef(null);
   const [taskWidth, setTaskWidth] = useState(0);
   const [taskHeight, setTaskHeight] = useState(0);
-  const [selectedId, setSelectedId] = useState(null);
 
   // to calculate task menu position.
   useEffect(function () {
@@ -204,9 +239,9 @@ function Item({ item, onToggleTask, onDeleteTask, onEditTask }) {
     };
   }, []);
 
-  function handleMenuDisplay(id) {
-    setSelectedId(id !== selectedId ? id : null);
-  }
+  // function handleMenuDisplay(id) {
+  //   onSelectedId(id !== selectedId ? id : null);
+  // }
 
   return (
     <li>
@@ -229,7 +264,7 @@ function Item({ item, onToggleTask, onDeleteTask, onEditTask }) {
         </span>
         <img
           src={More}
-          onClick={() => handleMenuDisplay(item.id)}
+          onClick={() => onMenuDisplay(item.id)}
           className="more-btn"
           alt="more"
         />
@@ -246,7 +281,8 @@ function Item({ item, onToggleTask, onDeleteTask, onEditTask }) {
             style={{ cursor: "pointer" }}
             onClick={() => {
               onEditTask(item.task);
-              handleMenuDisplay(item.id);
+              // handleMenuDisplay(item.id); // closes the menu display (Now I don't wanna toggle it cause the selected Id would be lost.)
+              onEditState(); //toggles the edit state.
             }}
           >
             Edit
@@ -277,12 +313,28 @@ function Indicator({ items }) {
   );
 }
 
-function AddTask({ taskInfo, onToggleModal, onAddTask, onTaskInfo }) {
+function AddTask({
+  taskInfo,
+  onToggleModal,
+  onAddTask,
+  onTaskInfo,
+  selectedId,
+  isEditing,
+  onEditState,
+  items,
+  onItems,
+  onMenuDisplay,
+}) {
   const inputEl = useRef(null);
+  const prevId = useRef(null);
 
   useEffect(() => {
     inputEl.current.focus();
   });
+
+  useEffect(() => {
+    prevId.current = selectedId;
+  }, [selectedId]);
 
   useEffect(function () {
     const body = document.body;
@@ -307,15 +359,35 @@ function AddTask({ taskInfo, onToggleModal, onAddTask, onTaskInfo }) {
     onToggleModal();
   }
 
-  // function saveEditedTask(e, taskId) {
-  //   e.preventDefault();
-  // }
+  function handleCancel() {
+    onToggleModal();
+    onTaskInfo("");
+    isEditing ? onEditState() : null;
+    selectedId !== null && onMenuDisplay(selectedId);
+  }
+
+  function handleConvertTask(e) {
+    // This function is to save the task after the task has been edited.
+    e.preventDefault();
+    const convertedTasks = items.map((item) => {
+      if (item.id === selectedId) {
+        return { ...item, task: taskInfo };
+      }
+      return item;
+    });
+    onItems(convertedTasks);
+
+    onEditState();
+    onMenuDisplay(selectedId);
+    onToggleModal();
+  }
 
   return (
     <>
-      <form className="form" onSubmit={handleSubmit}>
-        {" "}
-        {/*taskInfo === "" ? handleSubmit : onEdit */}
+      <form
+        className="form"
+        onSubmit={isEditing ? handleConvertTask : handleSubmit}
+      >
         <input
           type="text"
           placeholder="Enter a new task"
@@ -325,14 +397,13 @@ function AddTask({ taskInfo, onToggleModal, onAddTask, onTaskInfo }) {
           spellCheck="false"
         />
         <div className="action-btns">
-          <button type="button" onClick={onToggleModal}>
+          <button type="button" onClick={handleCancel}>
             Cancel
           </button>
-          <button type="submit">Add task</button>{" "}
-          {/*taskInfo === "" ? Add task : Save  (It wouldn't actually work.)*/}
+          <button type="submit">{isEditing ? "Save" : "Add task"}</button>
         </div>
       </form>
-      <div className="overlay" onClick={onToggleModal}></div>
+      <div className="overlay" onClick={handleCancel}></div>
     </>
   );
 }
