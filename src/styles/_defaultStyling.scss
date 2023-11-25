@@ -30,9 +30,10 @@ $default: 1.5rem;
 
 body {
   background: $background;
+  overflow-x: hidden;
   header {
     h1 {
-      font-size: 80px;
+      font-size: 5rem;
       font-weight: 900;
       text-align: center;
       margin: 30px 0; // Subject to change 56px for now.
@@ -105,3 +106,29 @@ body {
     backdrop-filter: blur(2px);
   }
 }
+
+.custom-toast .Toastify__progress-bar {
+  background-color: $yellow;
+}
+
+@media (max-width: 1110px) {
+  body {
+    header {
+      h1 {
+        font-size: 4.3rem;
+      }
+    }
+  }
+}
+
+// @media (max-width: 830px) {
+//   $default: 1rem;
+
+//   body {
+//     header {
+//       h1 {
+//         font-size: 3.9rem;
+//       }
+//     }
+//   }
+// }

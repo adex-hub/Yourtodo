@@ -1,17 +1,60 @@
 /* eslint-disable react/prop-types */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./styles/style.scss";
 import { useLocalStorageState } from "./useLocalStorageState";
 import Indicator from "./components/Indicator";
 import TodoList from "./components/TodoList";
 import Modal from "./components/Modal";
 import Title from "./components/Title";
+import ConfettiDisplay from "./components/ConfettiDisplay";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import data from "./data.json";
 
 function App() {
   const [items, setItems] = useLocalStorageState([], "items");
   const [taskInfo, setTaskInfo] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
+
+  // const randomNum = Math.round(Math.random() * 4);
+
+  useEffect(function () {
+    function callback(e) {
+      if (e.key === "+") {
+        handleToggleModal();
+      }
+    }
+
+    document.addEventListener("keydown", callback);
+
+    return function () {
+      document.removeEventListener("keydown", callback);
+    };
+  }, []);
+
+  const allTasksCompleted = items.every((item) => item.done);
+
+  useEffect(function () {
+    if (allTasksCompleted) {
+      toast("🥳 You've completed your tasks!", {
+        position: "bottom-center",
+        autoClose: 3000, // milliseconds
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        theme: "dark",
+        className: "custom-toast",
+      });
+    }
+
+    return () => {
+      if (!allTasksCompleted) {
+        null;
+      }
+    };
+  });
 
   function handleAddTask(item) {
     setItems((items) => [...items, item]);
@@ -30,8 +73,17 @@ function App() {
     setSelectedId(id !== selectedId ? id : null);
   }
 
+  // function handleCondition() {
+  //   if (items.every((item) => item.done)) {
+  //     toast.success("Condition met yay");
+  //   }
+  // }
+
   return (
     <>
+      {items.every((item) => item.done) && items.length !== 0 ? (
+        <ConfettiDisplay />
+      ) : null}
       <Title />
       {modalVisible && (
         <Modal
@@ -51,14 +103,25 @@ function App() {
       <main>
         {items.length === 0 ? (
           <div className="initial-screen">
-            <img src="phone.svg" className="illustration" alt="phone" />
-            <p className="quote">
-              &quot;To win the week, you have to win the day. Create your first
-              task to start winning.&quot;
-            </p>
+            <img src={data[0].image} className="illustration" alt="phone" />
+            <p className="quote">&quot;{data[0].quote}&quot;</p>
             <button className="first-click" onClick={handleToggleModal}>
               Add task
             </button>
+            <p style={{ position: "absolute", bottom: 10, opacity: 0.5 }}>
+              Hit{" "}
+              <kbd
+                style={{
+                  background: "#4d4d4d",
+                  padding: "0 .3rem",
+                  borderRadius: "3px",
+                  textAlign: "center",
+                }}
+              >
+                +
+              </kbd>{" "}
+              on your keyboard to add a new task
+            </p>
           </div>
         ) : (
           <>
@@ -72,6 +135,7 @@ function App() {
               onMenuDisplay={handleMenuDisplay}
             />
             <Indicator items={items} />
+            {items.every((item) => item.done) && <ToastContainer />}
           </>
         )}
       </main>

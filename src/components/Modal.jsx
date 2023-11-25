@@ -45,6 +45,7 @@ export default function Modal({
     onAddTask(newTask);
     onTaskInfo("");
     onToggleModal();
+    onMenuDisplay(selectedId);
   }
 
   function handleCancel() {
@@ -71,6 +72,11 @@ export default function Modal({
     onToggleModal();
   }
 
+  function handleInputChange(e) {
+    const inputValue = e.target.value.replace("+", "");
+    onTaskInfo(inputValue);
+  }
+
   return (
     <>
       <form
@@ -82,7 +88,7 @@ export default function Modal({
           placeholder="Enter a new task"
           ref={inputEl}
           value={taskInfo}
-          onChange={(e) => onTaskInfo(e.target.value)}
+          onChange={handleInputChange}
           spellCheck="false"
         />
         <div className="action-btns">

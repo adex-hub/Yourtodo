@@ -2,6 +2,7 @@
 
 main {
   margin: 0 150px;
+  transition: all 0.3s ease;
   .action-btn {
     color: $yellow;
     font-size: $default;
@@ -84,5 +85,24 @@ main {
     font-size: 20px;
     font-weight: 600;
     margin-bottom: 25px;
+  }
+}
+
+@media (max-width: 1110px) {
+  main {
+    margin: 0 70px;
+  }
+}
+
+@media (max-width: 820px) {
+  main {
+    margin: 0 40px;
+    ul {
+      li {
+        .task {
+          font-size: 1.3rem;
+        }
+      }
+    }
   }
 }

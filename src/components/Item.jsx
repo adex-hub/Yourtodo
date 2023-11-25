@@ -18,27 +18,27 @@ export default function Item({
   const [taskHeight, setTaskHeight] = useState(0);
 
   // to calculate task menu position.
-  useEffect(function () {
-    const taskEl = taskRef.current;
-    if (taskEl) {
-      setTaskWidth(taskEl.offsetWidth);
-      setTaskHeight(taskEl.offsetHeight);
-    }
+  useEffect(
+    function () {
+      const taskEl = taskRef.current;
+      if (taskEl) {
+        setTaskWidth(taskEl.offsetWidth);
+        setTaskHeight(taskEl.offsetHeight);
+      }
 
-    function handleResize() {
-      setTaskWidth(taskEl.offsetWidth);
-      setTaskHeight(taskEl.offsetHeight);
-    }
+      function handleResize() {
+        setTaskWidth(taskEl.offsetWidth);
+        setTaskHeight(taskEl.offsetHeight);
+      }
 
-    window.addEventListener("resize", handleResize);
-    return function () {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+      window.addEventListener("resize", handleResize);
+      return function () {
+        window.removeEventListener("resize", handleResize);
+      };
+    },
+    [taskWidth, taskHeight]
+  );
 
-  // function handleMenuDisplay(id) {
-  //   onSelectedId(id !== selectedId ? id : null);
-  // }
   return (
     <li>
       <div className="task" ref={taskRef}>
