@@ -35,11 +35,11 @@ function App() {
 
   const allTasksCompleted = items.every((item) => item.done);
 
-  useEffect(function () {
+  useEffect(() => {
     if (allTasksCompleted) {
-      toast("🥳 You've completed your tasks!", {
+      const toastId = toast("🥳 You've completed your tasks!", {
         position: "bottom-center",
-        autoClose: 3000, // milliseconds
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -47,14 +47,12 @@ function App() {
         theme: "dark",
         className: "custom-toast",
       });
-    }
 
-    return () => {
-      if (!allTasksCompleted) {
-        null;
-      }
-    };
-  });
+      return () => {
+        toast.dismiss(toastId);
+      };
+    }
+  }, [allTasksCompleted]);
 
   function handleAddTask(item) {
     setItems((items) => [...items, item]);
