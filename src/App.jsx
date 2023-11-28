@@ -17,7 +17,7 @@ function App() {
   const [isEditing, setIsEditing] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
 
-  const randomNum = Math.round(Math.random() * 4);
+  // const randomNum = Math.round(Math.random() * 4);
 
   useEffect(function () {
     function callback(e) {
@@ -102,7 +102,7 @@ function App() {
         {items.length === 0 ? (
           <div className="initial-screen">
             <img src={data[0].image} className="illustration" alt="phone" />
-            <p className="quote">&quot;{data[randomNum].quote}&quot;</p>
+            <p className="quote">&quot;{data[0].quote}&quot;</p>
             <button className="first-click" onClick={handleToggleModal}>
               Add task
             </button>
