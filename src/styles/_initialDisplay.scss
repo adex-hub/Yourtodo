@@ -11,7 +11,7 @@ main {
 
     .illustration {
       width: 230px;
-      height: 275.545px;
+      // height: 275.545px;
     }
     .quote {
       color: $white;
@@ -22,7 +22,7 @@ main {
       line-height: 2rem;
     }
     button {
-      font-size: 1.5rem;
+      font-size: $default;
       font-weight: 700;
       border-radius: 1rem;
       margin: 15px 0 0 0;
@@ -30,6 +30,39 @@ main {
       padding: 1rem;
       background: $yellow;
       border: none;
+    }
+  }
+}
+
+// Medium
+@media (max-width: 690px) {
+  main {
+    .initial-screen {
+      .quote {
+        width: 90vw;
+      }
+    }
+  }
+}
+
+// Small
+@media (max-width: 520px) {
+  main {
+    .initial-screen {
+      // .illustration {
+      //   width: 200px; //might undo this one but lemme style the title first.
+      // }
+      .quote {
+        font-size: $default-md;
+        margin: 60px 0 20px 0;
+      }
+      button {
+        font-size: $default-md;
+        padding: 0.9rem;
+      }
+      .kbd-info {
+        display: none;
+      }
     }
   }
 }

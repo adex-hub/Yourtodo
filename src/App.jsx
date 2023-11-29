@@ -106,7 +106,10 @@ function App() {
             <button className="first-click" onClick={handleToggleModal}>
               Add task
             </button>
-            <p style={{ position: "absolute", bottom: 10, opacity: 0.5 }}>
+            <p
+              className="kbd-info"
+              style={{ position: "absolute", bottom: 10, opacity: 0.5 }}
+            >
               Hit{" "}
               <kbd
                 style={{
