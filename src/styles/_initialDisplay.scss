@@ -49,9 +49,6 @@ main {
 @media (max-width: 520px) {
   main {
     .initial-screen {
-      // .illustration {
-      //   width: 200px; //might undo this one but lemme style the title first.
-      // }
       .quote {
         font-size: $default-md;
         margin: 60px 0 20px 0;
@@ -62,6 +59,23 @@ main {
       }
       .kbd-info {
         display: none;
+      }
+    }
+  }
+}
+
+// When the phone is in horizontal mode
+@media (max-height: 450px) {
+  main {
+    .initial-screen {
+      .illustration {
+        margin-top: 4.4rem;
+      }
+      .kbd-info {
+        display: none;
+      }
+      button {
+        margin: 15px 0;
       }
     }
   }
