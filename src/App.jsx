@@ -82,7 +82,7 @@ function App() {
       {items.every((item) => item.done) && items.length !== 0 ? (
         <ConfettiDisplay />
       ) : null}
-      <Title items={items} />
+      <Title />
       {modalVisible && (
         <Modal
           onToggleModal={handleToggleModal}

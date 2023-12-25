@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 import { useLocalStorageState } from "../useLocalStorageState";
 
-export default function Title({ items }) {
+export default function Title() {
   const [name, setName] = useLocalStorageState("ADE", "yourName");
   const [isHeaderFixed, setIsHeaderFixed] = useState(false);
+  const adjViewportHeight = window.innerHeight + 100;
+  const bodyHeight = document.body.clientHeight;
 
   function handleNameChange(e) {
     setName(e.target.innerHTML);
@@ -22,14 +24,18 @@ export default function Title({ items }) {
     // Attach the event listener when the component mounts
     window.addEventListener("scroll", handleScroll);
 
-    // Remove the event listener when the component unmounts to prevent memory leaks
+    // Remove the event listener using a cleanup function
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
   return (
-    <header className={isHeaderFixed && items.length > 6 ? "fixed-header" : ""}>
+    <header
+      className={
+        isHeaderFixed && bodyHeight > adjViewportHeight ? "fixed-header" : ""
+      }
+    >
       <h1>
         <span
           contentEditable
