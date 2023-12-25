@@ -44,6 +44,14 @@ body {
       text-transform: uppercase;
     }
   }
+  header.fixed-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: $background;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle box shadow */
+    z-index: 1000; /* Adjust the z-index as needed */
+  }
 
   form {
     // width: 650px;
@@ -132,9 +140,11 @@ body {
     header {
       h1 {
         font-size: 2.6rem;
+        // position: sticky;
         // margin: 15px 0;
       }
     }
+
     form {
       width: 80%;
       input {
