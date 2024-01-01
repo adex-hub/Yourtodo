@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import { useEffect, useState } from "react";
 import "./styles/style.scss";
-import { useLocalStorageState } from "./useLocalStorageState";
+import { useLocalStorageState } from "./hooks/useLocalStorageState";
 import Indicator from "./components/Indicator";
 import TodoList from "./components/TodoList";
 import Modal from "./components/Modal";
@@ -70,12 +70,6 @@ function App() {
   function handleMenuDisplay(id) {
     setSelectedId(id !== selectedId ? id : null);
   }
-
-  // function handleCondition() {
-  //   if (items.every((item) => item.done)) {
-  //     toast.success("Condition met yay");
-  //   }
-  // }
 
   return (
     <>

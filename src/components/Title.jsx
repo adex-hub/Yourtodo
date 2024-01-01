@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useLocalStorageState } from "../useLocalStorageState";
+import { useLocalStorageState } from "../hooks/useLocalStorageState";
 
 export default function Title() {
   const [name, setName] = useLocalStorageState("ADE", "yourName");
