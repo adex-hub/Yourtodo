@@ -100,7 +100,7 @@ export default function Item({
               style={
                 isMobile
                   ? {
-                      margin: "40px 0 24px 12px",
+                      margin: "1rem 0 24px 12px",
                       display: "flex",
                       alignItems: "center",
                       gap: "12px",
@@ -141,6 +141,3 @@ export default function Item({
     </li>
   );
 }
-
-// MISSION: TO MODIFY THE MENU TO A MUCH COOLER ONE.
-// FOR AFTER EFFECT, DELETE THE USE KEY HOOK.
