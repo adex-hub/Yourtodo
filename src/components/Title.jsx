@@ -15,7 +15,8 @@ export default function Title() {
     const handleScroll = () => {
       // Check if the user has scrolled down a certain amount (e.g., 100 pixels)
       const scrollPosition = window.scrollY;
-      const shouldFixHeader = scrollPosition > 100;
+      const headerHeight = document.querySelector("header").offsetHeight;
+      const shouldFixHeader = scrollPosition > headerHeight + 300;
 
       // Update the state to reflect whether the header should be fixed
       setIsHeaderFixed(shouldFixHeader);

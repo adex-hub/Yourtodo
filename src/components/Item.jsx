@@ -6,6 +6,7 @@ import More from "../assets/images/more.svg";
 import styles from "./Item.module.css";
 import editIcon from "../assets/Edit.svg";
 import deleteIcon from "../assets/Delete.svg";
+import closeIcon from "../assets/close.svg";
 
 export default function Item({
   item,
@@ -90,12 +91,28 @@ export default function Item({
                     bottom: 0,
                     left: 0,
                     border: 0,
-                    // borderColor: "#c6c6c614",
-                    height: "144px",
+                    height: "175px",
                     borderRadius: "2rem 2rem 0 0",
+                    padding: 0,
                   }
             }
           >
+            {isMobile && (
+              <>
+                <div className={styles.titleBar}>
+                  <div className="title" style={{ fontWeight: "600" }}>
+                    Actions
+                  </div>
+                  <img
+                    src={closeIcon}
+                    style={{ width: "1rem" }}
+                    onClick={() => onMenuDisplay(item.id)}
+                    alt="close-icon"
+                  />
+                </div>
+                <div className={styles.divider}></div>
+              </>
+            )}
             <p
               style={
                 isMobile
