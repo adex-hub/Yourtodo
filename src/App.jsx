@@ -10,6 +10,7 @@ import ConfettiDisplay from "./components/ConfettiDisplay";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import data from "./data.json";
+import NotificationComponent from "./components/NotificationComponent";
 
 function App() {
   const [items, setItems] = useLocalStorageState([], "items");
@@ -73,6 +74,7 @@ function App() {
 
   return (
     <>
+      <NotificationComponent items={items} />
       {items.every((item) => item.done) && items.length !== 0 ? (
         <ConfettiDisplay />
       ) : null}
